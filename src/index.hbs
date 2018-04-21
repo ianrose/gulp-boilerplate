@@ -1,0 +1,8 @@
+---
+data: '"frontMatter"'
+---
+{{> start title="Title"}}
+  {{#if frontMatter.data}} <div>Data: {{{typogrFormat frontMatter.data}}}</div>{{/if}}
+  {{#ifEqual globals.data './src/data/'}}<div>Data: {{globals.data}}</div>{{/ifEqual}}
+  <div>Built @ {{isoDate}}</div>
+{{> end}}
