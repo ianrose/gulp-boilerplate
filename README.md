@@ -11,6 +11,8 @@ Features:
 * Stylelint Standard
 * Rev styles and scripts
 * Sourcemaps
+* PostCSS-cssnext
+* PostCSS cssnano
 
 ### Getting Started
 
