@@ -1,5 +1,4 @@
 const gulp = require('gulp')
-const util = require('gulp-util')
 const sass = require('gulp-sass')
 const uglify = require('gulp-uglify')
 const rename = require('gulp-rename')
@@ -74,11 +73,9 @@ gulp.task('styles', function () {
   ]
   return gulp.src([paths.src.sass])
     .pipe(sourcemaps.init())
-    .on('error', util.log)
     .pipe(sass({
       includePaths: ['src/scss']
     }))
-    .on('error', util.log)
     .pipe(postcss(plugins))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(paths.dist.css))
@@ -97,11 +94,9 @@ gulp.task('templates', function () {
       `./${paths.src.root}/helpers/**/*.js`
     ])
     .data('./src/data/**/*.{js,json}')
-    .on('error', util.log)
     .pipe(rename({
       extname: '.html'
     }))
-    .on('error', util.log)
     .pipe(gulp.dest(paths.dist.root))
     .pipe(browserSync.reload({stream: true}))
 })
@@ -111,7 +106,6 @@ gulp.task('scripts:bundle', function () {
   return gulp.src('./src/js/*.js')
     .pipe(named())
     .pipe(webpack(webpackConfig))
-    .on('error', util.log)
     .pipe(gulp.dest(paths.dist.js))
     .pipe(browserSync.reload({stream: true}))
 })
@@ -120,7 +114,6 @@ gulp.task('scripts:bundle', function () {
 gulp.task('scripts:libs', function () {
   return gulp.src([paths.src.libs])
     .pipe(uglify())
-    .on('error', util.log)
     .pipe(gulp.dest(paths.dist.libs))
     .pipe(browserSync.reload({stream: true}))
 })
