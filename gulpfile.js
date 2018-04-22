@@ -5,13 +5,7 @@ const uglify = require('gulp-uglify')
 const rename = require('gulp-rename')
 const handlebars = require('gulp-hb')
 const browserSync = require('browser-sync')
-const sassGlob = require('gulp-sass-bulk-import')
 const watch = require('gulp-watch')
-const browserify = require('browserify')
-const source = require('vinyl-source-stream')
-const babelify = require('babelify')
-const gutil = require('gulp-util')
-const buffer = require('vinyl-buffer')
 const sourcemaps = require('gulp-sourcemaps')
 const sequence = require('run-sequence')
 const postcss = require('gulp-postcss')
@@ -21,6 +15,9 @@ const frontMatter = require('gulp-front-matter')
 const rev = require('gulp-rev')
 const revReplace = require('gulp-rev-replace')
 const del = require('del')
+const webpack = require('webpack-stream')
+const named = require('vinyl-named')
+const webpackConfig = require('./webpack.config')
 
 const paths = {
   src: { root: 'src' },
@@ -77,14 +74,13 @@ gulp.task('styles', function () {
   ]
   return gulp.src([paths.src.sass])
     .pipe(sourcemaps.init())
-    .pipe(sassGlob())
     .on('error', util.log)
     .pipe(sass({
       includePaths: ['src/scss']
     }))
     .on('error', util.log)
     .pipe(postcss(plugins))
-    .pipe(sourcemaps.write('./maps'))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(paths.dist.css))
     .pipe(browserSync.reload({stream: true}))
 })
@@ -110,22 +106,11 @@ gulp.task('templates', function () {
     .pipe(browserSync.reload({stream: true}))
 })
 
-// Bundle JS (Browserify & Babel)
+// Bundle JS (Webpack & Babel)
 gulp.task('scripts:bundle', function () {
-  return browserify({
-    entries: './src/js/index.js',
-    debug: true
-  })
-    .transform(babelify, {presets: ['@babel/preset-env']})
-    .bundle()
-    .on('error', err => {
-      gutil.log('Browserify Error', gutil.colors.red(err.message))
-    })
-    .pipe(source('bundle.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(uglify())
-    .pipe(sourcemaps.write('./maps'))
+  return gulp.src('./src/js/*.js')
+    .pipe(named())
+    .pipe(webpack(webpackConfig))
     .on('error', util.log)
     .pipe(gulp.dest(paths.dist.js))
     .pipe(browserSync.reload({stream: true}))

@@ -1,2 +1,3 @@
 import log from './modules/a'
-log()
+let msg = `hello world`
+log(msg)
