@@ -5,7 +5,8 @@ A starting point for creating static websites.
 Features:
 * Sass/SCSS
 * Handlebars templating with Frontmatter and global data `./src/data/*.json`
-* ES6 minification & bundling
+* Webpack
+* Babel
 * Live injection/reload with BrowserSync
 * StandardJS
 * Stylelint Standard
