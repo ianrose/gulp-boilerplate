@@ -16,6 +16,7 @@ const revReplace = require('gulp-rev-replace')
 const del = require('del')
 const webpack = require('webpack-stream')
 const named = require('vinyl-named')
+const layouts = require('handlebars-layouts')
 const webpackConfig = require('./webpack.config')
 
 const paths = {
@@ -86,13 +87,12 @@ gulp.task('styles', function () {
 gulp.task('templates', function () {
   return gulp.src([paths.src.root + '/*.hbs'])
     .pipe(frontMatter({
-      property: 'data.frontMatter'
+      property: 'data.locals'
     }))
     .pipe(handlebars()
       .partials('./src/partials/**/*.hbs'))
-    .helpers([
-      `./${paths.src.root}/helpers/**/*.js`
-    ])
+    .helpers(layouts)
+    .helpers(`./${paths.src.root}/helpers/**/*.js`)
     .data('./src/data/**/*.{js,json}')
     .pipe(rename({
       extname: '.html'

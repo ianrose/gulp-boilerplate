@@ -40,6 +40,7 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.0",
     "gulp-watch": "^4.3.5",
+    "handlebars-layouts": "^3.1.4",
     "luxon": "^1.1.0",
     "postcss-cssnext": "^3.1.0",
     "run-sequence": "^2.2.1",
