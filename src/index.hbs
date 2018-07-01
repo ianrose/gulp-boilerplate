@@ -1,11 +1,11 @@
 ---
 data: '"frontMatter"'
 ---
-
 {{#extend "layout" title="Title"}}
   {{#content "main"}}
-    {{#if data}} <div>Local Data: {{{typogrFormat data}}}</div>{{/if}}
-    {{#ifEqual global './src/data/'}}<div>Global Data: {{global}}</div>{{/ifEqual}}
-    <div>Built @ {{isoDate}}</div>
+    {{#if data}} <div>Local Data: <code>{{{typogrFormat data}}}</code></div>{{/if}}
+    {{#ifEqual global './src/data/globals.json'}}<div>Global Data: <code>{{global}}</code></div>{{/ifEqual}}
+    {{#ifEqual metadata.global './src/data/**/*.{js,json}'}}<div>Namespaced Data: <code>{{metadata.global}}</code></div>{{/ifEqual}}
+    <div>HBS Built @ <code>{{isoDate}}</code></div>
   {{/content}}
 {{/extend}}

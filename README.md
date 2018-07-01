@@ -4,7 +4,7 @@ A starting point for creating static websites.
 
 Features:
 * Sass/SCSS
-* Handlebars templating with Frontmatter and global data `./src/data/*.json`
+* Handlebars templating with Frontmatter, global data `./src/data/globals.json`, and namespaced by file name global data `./src/data/**/*.json`
 * Webpack
 * Babel
 * Live injection/reload with BrowserSync
