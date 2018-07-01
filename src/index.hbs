@@ -4,8 +4,8 @@ data: '"frontMatter"'
 
 {{#extend "layout" title="Title"}}
   {{#content "main"}}
-    {{#if locals.data}} <div>Data: {{{typogrFormat locals.data}}}</div>{{/if}}
-    {{#ifEqual globals.data './src/data/'}}<div>Data: {{globals.data}}</div>{{/ifEqual}}
+    {{#if data}} <div>Local Data: {{{typogrFormat data}}}</div>{{/if}}
+    {{#ifEqual global './src/data/'}}<div>Global Data: {{global}}</div>{{/ifEqual}}
     <div>Built @ {{isoDate}}</div>
   {{/content}}
 {{/extend}}

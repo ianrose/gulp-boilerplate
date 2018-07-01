@@ -1,3 +1,4 @@
+const devBuild = (process.env.NODE_ENV || '').trim().toLowerCase() === 'development'
 const gulp = require('gulp')
 const sass = require('gulp-sass')
 const uglify = require('gulp-uglify')
@@ -8,16 +9,22 @@ const watch = require('gulp-watch')
 const sourcemaps = require('gulp-sourcemaps')
 const sequence = require('run-sequence')
 const postcss = require('gulp-postcss')
+const plumber = require('gulp-plumber')
+const gulpif = require('gulp-if')
+const log = require('log-utils')
 const cssnext = require('postcss-cssnext')
 const cssnano = require('cssnano')({ autoprefixer: false })
-const frontMatter = require('gulp-front-matter')
+const data = require('gulp-data')
+const fm = require('front-matter')
 const rev = require('gulp-rev')
 const revReplace = require('gulp-rev-replace')
 const del = require('del')
 const webpack = require('webpack-stream')
 const named = require('vinyl-named')
 const layouts = require('handlebars-layouts')
+const fs = require('fs')
 const webpackConfig = require('./webpack.config')
+const pkg = require('./package.json')
 
 const paths = {
   src: { root: 'src' },
@@ -38,13 +45,22 @@ const paths = {
   }
 }.init()
 
+const handleError = function (error) {
+  console.log(
+    log.red(`${log.symbol.error} Error (${error.plugin}): ${error.message}`)
+  )
+  this.emit('end')
+}
+
 // Browsersync
 gulp.task('serve', function () {
   browserSync.init({
     server: paths.dist.root,
     open: false,
     notify: false,
-    online: false
+    online: false,
+    logFileChanges: false,
+    logPrefix: pkg.name
   })
 })
 
@@ -73,6 +89,7 @@ gulp.task('styles', function () {
     cssnano
   ]
   return gulp.src([paths.src.sass])
+    .pipe(gulpif(devBuild, plumber(handleError)))
     .pipe(sourcemaps.init())
     .pipe(sass({
       includePaths: ['src/scss']
@@ -85,11 +102,21 @@ gulp.task('styles', function () {
 
 // Compile handlebars/partials into html
 gulp.task('templates', function () {
-  return gulp.src([paths.src.root + '/*.hbs'])
-    .pipe(frontMatter({
-      property: 'data.locals'
-    }))
-    .pipe(handlebars()
+  return gulp.src([paths.src.root + '/*.hbs', '!**/_*.hbs'])
+    .pipe(gulpif(devBuild, plumber(handleError)))
+    .pipe(
+      data(function () {
+        return JSON.parse(fs.readFileSync('./src/data/globals.json'))
+      })
+    )
+    .pipe(
+      data(function (file) {
+        const content = fm(String(file.contents))
+        file.contents = Buffer.from(content.body)
+        return content.attributes
+      })
+    )
+    .pipe(handlebars({ debug: false })
       .partials('./src/partials/**/*.hbs'))
     .helpers(layouts)
     .helpers(`./${paths.src.root}/helpers/**/*.js`)
@@ -104,6 +131,7 @@ gulp.task('templates', function () {
 // Bundle JS (Webpack & Babel)
 gulp.task('scripts:bundle', function () {
   return gulp.src('./src/js/*.js')
+    .pipe(gulpif(devBuild, plumber(handleError)))
     .pipe(named())
     .pipe(webpack(webpackConfig))
     .pipe(gulp.dest(paths.dist.js))
