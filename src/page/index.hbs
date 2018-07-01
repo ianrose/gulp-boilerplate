@@ -1,12 +1,12 @@
 ---
-data: '"frontMatter"'
+data: '"Secondary Page"'
 ---
-{{#extend "layout" title="Title"}}
+{{#extend "layout" title="Secondary Page"}}
   {{#content "main"}}
     {{#if data}} <div>Local Data: <code>{{{typogrFormat data}}}</code></div>{{/if}}
     {{#ifEqual global './src/data/globals.json'}}<div>Global Data: <code>{{global}}</code></div>{{/ifEqual}}
     {{#ifEqual metadata.global './src/data/**/*.{js,json}'}}<div>Namespaced Data: <code>{{metadata.global}}</code></div>{{/ifEqual}}
     <div>HBS Built @ <code>{{isoDate}}</code></div>
-    <div><a href="/page">Secondary Page</a></div>
+    <div><a href="/">Home</a></div>
   {{/content}}
 {{/extend}}

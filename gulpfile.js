@@ -102,7 +102,7 @@ gulp.task('styles', function () {
 
 // Compile handlebars/partials into html
 gulp.task('templates', function () {
-  return gulp.src([paths.src.root + '/*.hbs', '!**/_*.hbs'])
+  return gulp.src([paths.src.root + '/**/*.hbs', '!**/_*.hbs', `!${paths.src.root}/partials/**`])
     .pipe(gulpif(devBuild, plumber(handleError)))
     .pipe(
       data(function () {
