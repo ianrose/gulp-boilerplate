@@ -30,16 +30,16 @@ const paths = {
   src: { root: 'src' },
   dist: { root: 'dist' },
   init: function () {
-    this.src.sass = this.src.root + '/scss/index.scss'
-    this.src.templates = this.src.root + '/**/*.hbs'
-    this.src.js = [this.src.root + '/js/**/*.js', '!' + this.src.root + '/js/libs/*.js']
-    this.src.libs = this.src.root + '/js/libs/*.js'
-    this.src.static = this.src.root + '/static/**/*.*'
-    this.src.files = this.src.root + '/*.{html,txt}'
-    this.dist.css = this.dist.root + '/css'
-    this.dist.static = this.dist.root + '/static'
-    this.dist.js = this.dist.root + '/js'
-    this.dist.libs = this.dist.root + '/js/libs'
+    this.src.sass = `${this.src.root}/scss/index.scss`
+    this.src.templates = `${this.src.root}/**/*.hbs`
+    this.src.js = [`${this.src.root}/js/**/*.js`, `!${this.src.root}/js/libs/*.js`]
+    this.src.libs = `${this.src.root}/js/libs/*.js`
+    this.src.static = `${this.src.root}/static/**/*.*`
+    this.src.files = `${this.src.root}/*.{html,txt}`
+    this.dist.css = `${this.dist.root}/css`
+    this.dist.static = `${this.dist.root}/static`
+    this.dist.js = `${this.dist.root}/js`
+    this.dist.libs = `${this.dist.root}/js/libs`
 
     return this
   }
